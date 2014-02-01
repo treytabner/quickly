@@ -6,6 +6,100 @@ Quickly lets you, simply put, quickly deploy and manage cloud servers.
 
 You can quickly deploy servers with a specially crafted deployment plan.  Plans are written in YAML and pretty simple.
 
+Plan files are easy.  You can define one or more servers to deploy, specifying which region to build servers in, defaults and details for specific servers.
+
+** Single server
+
+Deploying a single server can be done with a plan file such as:
+
+#+BEGIN_SRC yaml
+region: iad
+
+name: example
+role: [common, firewall]
+image: debian-7
+size: 2048
+count: 1
+#+END_SRC
+
+This will create one 2 GB Debian 7 server in IAD named example with the scripts and files deployed for the common and firewall roles.
+
+** Multiple servers
+
+If you want to deploy a cluster of servers, it's just as easy.  Deployment is done in parallel so you don't have to wait for each server to finish one by one.
+
+#+BEGIN_SRC yaml
+region: iad
+
+image: debian-7
+size: 1024
+count: 1
+role: [common, firewall]
+
+servers:
+  - role: web
+    count: 3
+
+  - role: db
+    size: 2048
+    count: 1
+#+END_SRC
+
+This will create four servers total in IAD.  One 2 GB Debian 7 server named db and three 1 GB Debian 7 servers named web01, web02 and web03.  The scripts and files for specified roles will be applied where applicable.
+
+** Plan file specifications
+
+Deployment plan files are written with YAML.  Your plan files are read from the present working directory.  The specification is as follows:
+
+*** Global defaults
+- region: Optional, defaults to 'iad' for the Rackspace IAD datacenter in Virginia.
+- name: Optional, default name or name prefix for deployed server(s).
+- image: Optional, default name of image for new server to be built from.
+- size: Optional, default memory size for new server, sorted by price.
+- role: Optional, list of roles that are included in the post-build deployment.
+- count: Optional, number of servers to be built, defaults to one (1).
+- servers: List of servers to deploy.  If not specified, the above keywords will be used to create one or more servers.
+
+*** Server settings
+
+If some settings are not specified, the global default will be used instead.
+
+- name: Optional, name of server or servers to build. If not specified, will default to role or global default.
+- image: Optional, name of image for new server to be built from.
+- size: Optional, default memory size for new server, sorted by price.
+- role: list of roles that are included in the post-build deployment.  Values are appended to any global defaults.
+- count: Optional, number of servers to be built, defaults to one (1).
+
+** Roles
+
+Roles are completely straight forward.  Your options are currently limited to a tree structure of files to copy over and a set of scripts to run after deployment.  For example, you may want to install your favorite Vim configuration files in /etc/vim and then install your favorite packages by default.  Templates will be added in the near future.
+
+In your present working directory, create a directory name roles.  For each role, you can have a sub-directory named files and scripts.  For example:
+
+#+BEGIN_SRC
+roles
+├── common
+│   ├── files
+│   │   └── etc
+│   │       ├── apt
+│   │       │   └── sources.list
+│   │       ├── motd
+│   │       └── vim
+│   │           └── vimrc.local
+│   └── scripts
+│       ├── apt.sh
+│       ├── cleanup.sh
+│       └── tools.sh
+├── db
+│   └── scripts
+│       └── db.sh
+└── web
+    └── scripts
+        └── web.sh
+#+END_SRC
+
+** More examples
+
 More examples can be found in the [[https://github.com/treytabner/quickly/tree/master/examples][examples]] directory.
 
 * Manage servers

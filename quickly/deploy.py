@@ -41,7 +41,7 @@ RACKSPACE_APIKEY = os.environ.get('RACKSPACE_APIKEY')
 
 DEFAULT_SIZE = 1024
 DEFAULT_IMAGE = "Debian 7"
-DEFAULT_REGION = "DFW"
+DEFAULT_REGION = "iad"
 
 
 def normalize_image_name(image_name):
