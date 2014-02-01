@@ -103,3 +103,13 @@ roles
 More examples can be found in the [[https://github.com/treytabner/quickly/tree/master/examples][examples]] directory.
 
 * Manage servers
+
+To manage an existing deployment, you'll need to specify a deployment plan to match server names in a region against, then you can run commands in parallel:
+
+#+BEGIN_SRC bash
+$ quickly manage multiple.yaml uname -a
+web01: Linux web01 3.2.0-4-amd64 #1 SMP Debian 3.2.51-1 x86_64 GNU/Linux
+web02: Linux web02 3.2.0-4-amd64 #1 SMP Debian 3.2.51-1 x86_64 GNU/Linux
+web03: Linux web03 3.2.0-4-amd64 #1 SMP Debian 3.2.51-1 x86_64 GNU/Linux
+db: Linux db 3.2.0-4-amd64 #1 SMP Debian 3.2.51-1 x86_64 GNU/Linux
+#+END_SRC
