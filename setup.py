@@ -27,6 +27,10 @@ setup(
     license="GPL3",
     url="https://github.com/treytabner/quickly",
     packages=['quickly'],
+    install_requires=[
+        'PyYaml',
+        'apache-libcloud==0.14.0-beta3',
+    ],
     entry_points={
         'console_scripts': [
             'quickly=quickly.shell:main',
