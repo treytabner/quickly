@@ -17,6 +17,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 """
 
 import argparse
+import pkg_resources
 
 from prettytable import PrettyTable
 
@@ -26,8 +27,12 @@ from quickly.manage import ManagementTool
 
 def main():
     """ Determine which quickly command to execute """
+    version = pkg_resources.require('quickly')[0].version
     parser = argparse.ArgumentParser(
-        description="Quickly deploy and manage cloud servers")
+        version=version, description="Quickly deploy and manage cloud servers")
+    parser.add_argument(
+        "-n", "--no-action", dest='action', action='store_false',
+        help="Perform no actions other than listing details")
 
     subparsers = parser.add_subparsers(dest='mode')
 
@@ -37,7 +42,7 @@ def main():
         'plan', help="File containing deployment plan in YAML format")
 
     manage_parser = subparsers.add_parser(
-        'manage', help='Manage one or more servers by executing commands')
+        'manage', help="Manage one or more servers by executing commands")
     manage_parser.add_argument(
         'plan', help="Plan that determines servers to action against")
     manage_parser.add_argument('command', nargs=argparse.REMAINDER,
@@ -51,17 +56,16 @@ def main():
         except Exception as exc:
             print("Shell exception: %s" % exc)
         else:
-            categories = ["Server Name", "Roles", "Image", "Size"]
-            todo = PrettyTable(categories)
-            for cat in categories:
-                todo.align[cat] = 'l'
+            todo = PrettyTable(["Server Name", "Roles", "Image", "Size"])
+            todo.align = 'l'
 
             for d in deploy.deployments:
                 todo.add_row([d.name, ', '.join(d.roles),
                               d.image.name, d.size.name])
             print(todo)
 
-            deploy.deploy()
+            if args.action:
+                deploy.deploy()
 
     elif args.mode == 'manage':
         manage = ManagementTool(args.plan)
@@ -75,7 +79,8 @@ def main():
             todo.add_row([s.name, s.extra.get('access_ip'), s.id])
         print(todo)
 
-        manage.execute(args.command)
+        if args.action:
+            manage.execute(args.command)
 
 
 if __name__ == "__main__":
