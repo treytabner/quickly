@@ -6,6 +6,6 @@ Quickly lets you, simply put, quickly deploy and manage cloud servers.
 
 You can quickly deploy servers with a specially crafted deployment plan.  Plans are written in YAML and pretty simple.
 
-More examples can be found in the examples directory.
+More examples can be found in the [[https://github.com/treytabner/quickly/tree/master/examples][examples]] directory.
 
 * Manage servers
