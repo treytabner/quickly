@@ -1,0 +1,14 @@
+region: iad
+
+image: debian-7
+size: 1024
+count: 1
+role: [common, firewall]
+
+servers:
+  - role: web
+    count: 3
+
+  - role: db
+    size: 2048
+    count: 1

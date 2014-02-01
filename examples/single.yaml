@@ -1,0 +1,7 @@
+region: iad
+
+name: example-server
+role: [common, firewall]
+image: debian-7
+size: 2048
+count: 1

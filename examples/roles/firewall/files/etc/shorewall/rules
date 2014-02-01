@@ -1,0 +1,4 @@
+SSH/ACCEPT all fw
+Ping/ACCEPT all fw
+Web/ACCEPT net fw
+Auth/REJECT net fw

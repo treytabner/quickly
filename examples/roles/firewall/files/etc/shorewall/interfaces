@@ -1,0 +1,1 @@
+net eth0 detect tcpflags,routefilter,nosmurfs

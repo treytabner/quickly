@@ -1,0 +1,4 @@
+deb http://mirror.rackspace.com/debian/ wheezy main contrib non-free
+deb http://mirror.rackspace.com/debian/ wheezy-updates main contrib non-free
+deb http://mirror.rackspace.com/debian-security/ wheezy/updates main contrib non-free
+deb http://mirror.rackspace.com/debian/ wheezy-backports main contrib non-free

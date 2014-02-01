@@ -1,0 +1,11 @@
+set modeline
+set expandtab
+set shiftwidth=4
+set tabstop=4
+set smarttab
+
+syntax enable
+set background=dark
+
+set paste
+set noai

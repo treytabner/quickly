@@ -1,0 +1,2 @@
+fw all ACCEPT
+all all DROP info

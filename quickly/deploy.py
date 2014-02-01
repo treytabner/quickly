@@ -104,7 +104,7 @@ class DeploymentTool(object):
     """ Main deployment tool with multiprocessing built-in """
     def __init__(self):
         try:
-            with open(sys.argv[1]) as plan:
+            with open(sys.argv[2]) as plan:
                 self.config = yaml.safe_load(plan.read())
 
         except IndexError:
