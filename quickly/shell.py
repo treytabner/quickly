@@ -70,10 +70,8 @@ def main():
     elif args.mode == 'manage':
         manage = ManagementTool(args.plan)
 
-        categories = ["Server Name", "Access IP", "Device ID"]
-        todo = PrettyTable(categories)
-        for cat in categories:
-            todo.align[cat] = 'l'
+        todo = PrettyTable(["Server Name", "Access IP", "Device ID"])
+        todo.align = 'l'
 
         for s in manage.servers:
             todo.add_row([s.name, s.extra.get('access_ip'), s.id])
