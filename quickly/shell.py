@@ -36,8 +36,9 @@ def main():
         else:
             raise Exception("Unknown command")
 
-    except IndexError:
+    except Exception as exc:
         print "Usage: %s deploy|manage ..." % basename(sys.argv[0])
+        print "Shell exception: %s" % exc
 
 
 if __name__ == "__main__":
