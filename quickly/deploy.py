@@ -22,7 +22,6 @@ import os
 from os.path import join
 
 import multiprocessing
-import sys
 import yaml
 
 from libcloud.compute.types import Provider
@@ -61,7 +60,7 @@ class Deployment(object):
             self.public_key = ssh_key.read()
 
     def __repr__(self):
-        return self.name
+        return "<%s>" % self.name
 
     def deploy(self, conn):
         """ Deploy a cloud server """
@@ -89,7 +88,6 @@ class Deployment(object):
                 name=self.name, image=self.image, size=self.size,
                 deploy=MultiStepDeployment(steps))
             print node
-            print dir(node)
 
         except DeploymentError as exc:
             print "Error: %s" % exc
@@ -102,9 +100,9 @@ class Deployment(object):
 
 class DeploymentTool(object):
     """ Main deployment tool with multiprocessing built-in """
-    def __init__(self):
+    def __init__(self, plan_file):
         try:
-            with open(sys.argv[2]) as plan:
+            with open(plan_file) as plan:
                 self.config = yaml.safe_load(plan.read())
 
         except IndexError:
@@ -157,7 +155,7 @@ class DeploymentTool(object):
                     server_roles = [server_roles]
                 roles = self.roles + server_roles
 
-                count = server.get('count', 1)
+                count = server.get('count', self.config.get('count', 1))
                 for i in range(count):
                     name = server.get('name', self.config.get('name'))
                     if not name:
@@ -191,17 +189,3 @@ class DeploymentTool(object):
             for depl in deployments:
                 depl.terminate()
                 depl.join()
-
-
-def main():
-    """ Deploy cloud servers """
-    try:
-        deployment = DeploymentTool()
-    except Exception as exc:
-        print exc
-    else:
-        deployment.deploy()
-
-
-if __name__ == "__main__":
-    main()

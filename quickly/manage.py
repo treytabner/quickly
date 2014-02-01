@@ -19,7 +19,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 import multiprocessing
 import os
 import paramiko
-import sys
 import yaml
 
 from libcloud.compute.types import Provider
@@ -40,12 +39,12 @@ DEFAULT_REGION = "iad"
 
 class ManagementTool(object):
     """ Management tool to run commands on desired servers """
-    def __init__(self):
+    def __init__(self, plan_file):
         try:
-            with open(sys.argv[2]) as plan:
+            with open(plan_file) as plan:
                 self.config = yaml.safe_load(plan.read())
 
-            self.deployment = DeploymentTool()
+            self.deployment = DeploymentTool(plan_file)
 
         except IndexError:
             raise Exception("You need to specify a deployment plan.")
@@ -54,7 +53,7 @@ class ManagementTool(object):
             raise Exception("Unable to read specified deployment plan.")
 
         except Exception as exc:
-            print exc
+            print "Management exception: %s" % exc
 
         else:
             self.driver = get_driver(Provider.RACKSPACE)
@@ -68,11 +67,13 @@ class ManagementTool(object):
                     if depl.name == node.name:
                         self.servers.append(node)
 
-    def execute(self):
+    def execute(self, command):
         """ Execute specified commands on target servers """
         cmds = []
 
-        command = ' '.join(sys.argv[3:])
+        if type(command) is list:
+            command = ' '.join(command)
+
         for server in self.servers:
             for ip in server.public_ips:
                 if '.' in ip:
@@ -98,13 +99,3 @@ class ManagementTool(object):
         stdin, stdout, stderr = ssh.exec_command(command)
         for line in stdout:
             print "%s: %s" % (name, line.strip('\n'))
-
-
-def main():
-    """ Remote management of cloud servers """
-    manage = ManagementTool()
-    manage.execute()
-
-
-if __name__ == "__main__":
-    main()
