@@ -1,3 +1,3 @@
 * Quickly
 
-Quickly lets you, simply put, quickly deploy and configure cloud servers.
+Quickly lets you, simply put, quickly deploy and manage cloud servers.

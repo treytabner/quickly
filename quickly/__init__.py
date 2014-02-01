@@ -15,25 +15,3 @@ GNU General Public License for more details.
 You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 """
-
-from setuptools import setup
-
-setup(
-    name="quickly",
-    version="0.1",
-    author="Trey Tabner",
-    author_email="trey@tabner.com",
-    description=("Quickly deploy and manage cloud servers"),
-    license="GPL3",
-    url="https://github.com/treytabner/quickly",
-    packages=['quickly'],
-    install_requires=[
-        'PyYaml',
-        'apache-libcloud==0.14.0-beta3',
-    ],
-    entry_points={
-        'console_scripts': [
-            'quickly=quickly.shell:main',
-        ],
-    }
-)
