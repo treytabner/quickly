@@ -44,7 +44,7 @@ class ManagementTool(object):
             with open(plan_file) as plan:
                 self.config = yaml.safe_load(plan.read())
 
-            self.deployment = DeploymentTool(plan_file)
+            self.deployment = DeploymentTool(plan_file, manage=True)
 
         except IndexError:
             raise Exception("You need to specify a deployment plan.")

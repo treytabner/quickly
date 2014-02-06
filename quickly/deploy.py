@@ -100,7 +100,7 @@ class Deployment(object):
 
 class DeploymentTool(object):
     """ Main deployment tool with multiprocessing built-in """
-    def __init__(self, plan_file):
+    def __init__(self, plan_file, manage=False):
         try:
             with open(plan_file) as plan:
                 self.config = yaml.safe_load(plan.read())
@@ -117,10 +117,11 @@ class DeploymentTool(object):
                                     region=self.config.get('region',
                                                            DEFAULT_REGION))
 
-            self.sizes = self.conn.list_sizes()
-            self.sizes.sort(key=lambda size: size.price)
+            if not manage:
+                self.sizes = self.conn.list_sizes()
+                self.sizes.sort(key=lambda size: size.price)
 
-            self.images = self.conn.list_images()
+                self.images = self.conn.list_images()
 
             self.roles = self.config.get('role', [])
             if type(self.roles) is not list:
@@ -134,21 +135,23 @@ class DeploymentTool(object):
 
             for server in servers:
                 image = None
-                for i in self.images:
-                    image_name = server.get(
-                        'image', self.config.get('image', DEFAULT_IMAGE))
-                    image_name = normalize_image_name(image_name)
-                    if image_name in normalize_image_name(i.name):
-                        image = i
-                        break
-
                 size = None
-                for s in self.sizes:
-                    ram_size = server.get(
-                        'size', self.config.get('size', DEFAULT_SIZE))
-                    if s.ram == ram_size or s.ram > ram_size:
-                        size = s
-                        break
+
+                if not manage:
+                    for i in self.images:
+                        image_name = server.get(
+                            'image', self.config.get('image', DEFAULT_IMAGE))
+                        image_name = normalize_image_name(image_name)
+                        if image_name in normalize_image_name(i.name):
+                            image = i
+                            break
+
+                    for s in self.sizes:
+                        ram_size = server.get(
+                            'size', self.config.get('size', DEFAULT_SIZE))
+                        if s.ram == ram_size or s.ram > ram_size:
+                            size = s
+                            break
 
                 server_roles = server.get('role', [])
                 if type(server_roles) is not list:
