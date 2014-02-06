@@ -102,14 +102,85 @@ roles
 
 More examples can be found in the [[https://github.com/treytabner/quickly/tree/master/examples][examples]] directory.
 
+* Deploy servers
+
+To deploy a new set of servers, you'll need to specify a deployment plan:
+
+#+BEGIN_SRC bash
+$ quickly deploy mydeployment.yaml
++-------------+-----------------------+-------------------+------------------+
+| Server Name | Roles                 | Image             | Size             |
++-------------+-----------------------+-------------------+------------------+
+| web01       | common, firewall, web | Debian 7 (Wheezy) | 1 GB Performance |
+| web02       | common, firewall, web | Debian 7 (Wheezy) | 1 GB Performance |
+| web03       | common, firewall, web | Debian 7 (Wheezy) | 1 GB Performance |
+| web04       | common, firewall, web | Debian 7 (Wheezy) | 1 GB Performance |
+| web05       | common, firewall, web | Debian 7 (Wheezy) | 1 GB Performance |
+| web06       | common, firewall, web | Debian 7 (Wheezy) | 1 GB Performance |
+| web07       | common, firewall, web | Debian 7 (Wheezy) | 1 GB Performance |
+| web08       | common, firewall, web | Debian 7 (Wheezy) | 1 GB Performance |
+| db01        | common, firewall, db  | Debian 7 (Wheezy) | 2 GB Performance |
+| db02        | common, firewall, db  | Debian 7 (Wheezy) | 2 GB Performance |
+| db03        | common, firewall, db  | Debian 7 (Wheezy) | 2 GB Performance |
+| db04        | common, firewall, db  | Debian 7 (Wheezy) | 2 GB Performance |
++-------------+-----------------------+-------------------+------------------+
+#+END_SRC
+
 * Manage servers
 
 To manage an existing deployment, you'll need to specify a deployment plan to match server names in a region against, then you can run commands in parallel:
 
 #+BEGIN_SRC bash
-$ quickly manage multiple.yaml uname -a
-web01: Linux web01 3.2.0-4-amd64 #1 SMP Debian 3.2.51-1 x86_64 GNU/Linux
-web02: Linux web02 3.2.0-4-amd64 #1 SMP Debian 3.2.51-1 x86_64 GNU/Linux
+$ quickly manage mydeployment.yaml uname -a
++-------------+-----------------+--------------------------------------+
+| Server Name | Access IP       | Device ID                            |
++-------------+-----------------+--------------------------------------+
+| web01       | 192.168.100.191 | b7f5ccef-05a4-4be8-987c-9b504f0e69f8 |
+| web02       | 192.168.100.222 | e1af6098-18ac-4e35-bc7e-50890c408a7b |
+| web03       | 192.168.100.218 | 5965dc10-3c7c-4b14-9603-1a46fc76362a |
+| web04       | 192.168.100.173 | 57654b98-949e-460c-aeaf-5d9f18e737eb |
+| web05       | 192.168.100.150 | 8442a16d-c7cb-486e-b559-ab70139f89ee |
+| web06       | 192.168.100.7   | 1d3ba3b3-9d73-41c1-9c78-915ab6bf4f8d |
+| web07       | 192.168.100.61  | 2702a499-4e10-4383-a5be-598b4e236ebd |
+| web08       | 192.168.100.225 | f53e8825-314d-421f-830a-6faa9d5076c1 |
+| db01        | 192.168.100.250 | b9d1f3c0-08b0-4488-961c-f0118c07fb39 |
+| db02        | 192.168.100.137 | caeae49f-018f-4244-9236-241efc638d6c |
+| db03        | 192.168.100.203 | 5525ec48-8981-42a2-bdac-880bab6b0e2a |
+| db04        | 192.168.100.107 | 6085832e-8101-4dd2-9b83-89db342a82fa |
++-------------+-----------------+--------------------------------------+
 web03: Linux web03 3.2.0-4-amd64 #1 SMP Debian 3.2.51-1 x86_64 GNU/Linux
-db: Linux db 3.2.0-4-amd64 #1 SMP Debian 3.2.51-1 x86_64 GNU/Linux
+web05: Linux web05 3.2.0-4-amd64 #1 SMP Debian 3.2.51-1 x86_64 GNU/Linux
+db02: Linux db02 3.2.0-4-amd64 #1 SMP Debian 3.2.51-1 x86_64 GNU/Linux
+web02: Linux web02 3.2.0-4-amd64 #1 SMP Debian 3.2.51-1 x86_64 GNU/Linux
+db04: Linux db04 3.2.0-4-amd64 #1 SMP Debian 3.2.51-1 x86_64 GNU/Linux
+web04: Linux web04 3.2.0-4-amd64 #1 SMP Debian 3.2.51-1 x86_64 GNU/Linux
+db01: Linux db01 3.2.0-4-amd64 #1 SMP Debian 3.2.51-1 x86_64 GNU/Linux
+web01: Linux web01 3.2.0-4-amd64 #1 SMP Debian 3.2.51-1 x86_64 GNU/Linux
+web08: Linux web08 3.2.0-4-amd64 #1 SMP Debian 3.2.51-1 x86_64 GNU/Linux
+web07: Linux web07 3.2.0-4-amd64 #1 SMP Debian 3.2.51-1 x86_64 GNU/Linux
+web06: Linux web06 3.2.0-4-amd64 #1 SMP Debian 3.2.51-1 x86_64 GNU/Linux
+db03: Linux db03 3.2.0-4-amd64 #1 SMP Debian 3.2.51-1 x86_64 GNU/Linux
 #+END_SRC
+
+* Processes
+
+Quickly uses multiprocessing, so separate processes are started up to deal with each server you are deploying or managing.  According to the process list, this looks like:
+
+#+BEGIN_SRC
+trey      7557  0.0  0.0  20704  3448 pts/10   Ss   09:39   0:00  \_ bash
+trey      7873  0.3  0.5  89396 21372 pts/10   S+   09:46   0:00  |   \_ /usr/bin/python /usr/local/bin/quickly deploy mydeployment.yaml
+trey      7874  0.8  0.4  89528 19404 pts/10   S+   09:46   0:00  |       \_ /usr/bin/python /usr/local/bin/quickly deploy mydeployment.yaml
+trey      7875  0.7  0.4  89528 19404 pts/10   S+   09:46   0:00  |       \_ /usr/bin/python /usr/local/bin/quickly deploy mydeployment.yaml
+trey      7876  0.7  0.4  89528 19408 pts/10   S+   09:46   0:00  |       \_ /usr/bin/python /usr/local/bin/quickly deploy mydeployment.yaml
+trey      7877  0.6  0.4  89528 19408 pts/10   S+   09:46   0:00  |       \_ /usr/bin/python /usr/local/bin/quickly deploy mydeployment.yaml
+trey      7878  0.7  0.4  89528 19412 pts/10   S+   09:46   0:00  |       \_ /usr/bin/python /usr/local/bin/quickly deploy mydeployment.yaml
+trey      7879  0.6  0.4  89528 19412 pts/10   S+   09:46   0:00  |       \_ /usr/bin/python /usr/local/bin/quickly deploy mydeployment.yaml
+trey      7880  0.7  0.4  89528 19412 pts/10   S+   09:46   0:00  |       \_ /usr/bin/python /usr/local/bin/quickly deploy mydeployment.yaml
+trey      7881  0.7  0.4  89528 19416 pts/10   S+   09:46   0:00  |       \_ /usr/bin/python /usr/local/bin/quickly deploy mydeployment.yaml
+trey      7882  0.7  0.4  89528 19416 pts/10   S+   09:46   0:00  |       \_ /usr/bin/python /usr/local/bin/quickly deploy mydeployment.yaml
+trey      7883  0.7  0.4  89528 19420 pts/10   S+   09:46   0:00  |       \_ /usr/bin/python /usr/local/bin/quickly deploy mydeployment.yaml
+trey      7884  0.6  0.4  89528 19420 pts/10   S+   09:46   0:00  |       \_ /usr/bin/python /usr/local/bin/quickly deploy mydeployment.yaml
+trey      7885  0.7  0.4  89528 19420 pts/10   S+   09:46   0:00  |       \_ /usr/bin/python /usr/local/bin/quickly deploy mydeployment.yaml
+#+END_SRC
+
+Future versions of Quickly will make use of setproctitle to update the title for each specific process.
