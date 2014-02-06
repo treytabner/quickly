@@ -8,6 +8,12 @@ You can quickly deploy servers with a specially crafted deployment plan.  Plans 
 
 Plan files are easy.  You can define one or more servers to deploy, specifying which region to build servers in, defaults and details for specific servers.
 
+* Features
+
+Quickly is written in Python and uses Apache Libcloud, which is capable of talking to over 20 different cloud providers, however currently only the Rackspace Cloud is supported in Quickly.  In the future, you will be able to customize your cloud providers with more detail.
+
+Currently Quickly is able to deploy servers with customized files and scripts.  Template support is coming soon along with the ability to wait for all servers to finish coming online before continuing with deployment.  The primary reason for this is to be able to expose server metadata to each server for template rendering and scripting.
+
 ** Single server
 
 Deploying a single server can be done with a plan file such as:
@@ -102,7 +108,7 @@ roles
 
 More examples can be found in the [[https://github.com/treytabner/quickly/tree/master/examples][examples]] directory.
 
-* Deploy servers
+*** Deploy servers
 
 To deploy a new set of servers, you'll need to specify a deployment plan:
 
@@ -126,7 +132,7 @@ $ quickly deploy mydeployment.yaml
 +-------------+-----------------------+-------------------+------------------+
 #+END_SRC
 
-* Manage servers
+*** Manage servers
 
 To manage an existing deployment, you'll need to specify a deployment plan to match server names in a region against, then you can run commands in parallel:
 
@@ -162,7 +168,7 @@ web06: Linux web06 3.2.0-4-amd64 #1 SMP Debian 3.2.51-1 x86_64 GNU/Linux
 db03: Linux db03 3.2.0-4-amd64 #1 SMP Debian 3.2.51-1 x86_64 GNU/Linux
 #+END_SRC
 
-* Processes
+*** Processes
 
 Quickly uses multiprocessing, so separate processes are started up to deal with each server you are deploying or managing.  According to the process list, this looks like:
 
