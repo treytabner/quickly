@@ -30,6 +30,7 @@ setup(
     install_requires=[
         'PyYaml',
         'apache-libcloud==0.14.0-beta3',
+        'paramiko',
     ],
     entry_points={
         'console_scripts': [

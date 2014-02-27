@@ -136,6 +136,7 @@ class DeploymentTool(object):
             for server in servers:
                 image = None
                 size = None
+                domain = self.config.get('domain')
 
                 if not manage:
                     for i in self.images:
@@ -171,6 +172,9 @@ class DeploymentTool(object):
                         name = name % (i + 1)
                     elif count > 1:
                         name = "%s%02d" % (name, i + 1)
+
+                    if domain:
+                        name = "%s.%s" % (name, domain)
 
                     self.deployments.append(
                         Deployment(name, image, size, roles))

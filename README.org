@@ -60,6 +60,7 @@ Deployment plan files are written with YAML.  Your plan files are read from the 
 *** Global defaults
 - region: Optional, defaults to 'iad' for the Rackspace IAD datacenter in Virginia.
 - name: Optional, default name or name prefix for deployed server(s).
+- domain: Optional, domain to append to end of name or names for deployed servers.
 - image: Optional, default name of image for new server to be built from.
 - size: Optional, default memory size for new server, sorted by price.
 - role: Optional, list of roles that are included in the post-build deployment.
